@@ -1,0 +1,440 @@
+/* Email Verification Step Styles */
+.verification-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.email-display {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.email-display p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.send-otp-section {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.send-otp-section p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.send-otp-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.send-otp-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.send-otp-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.otp-input-section {
+  text-align: center;
+}
+
+.otp-instructions {
+  margin-bottom: 25px;
+}
+
+.otp-instructions p {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.timer-text {
+  color: #28a745;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.otp-input-container {
+  position: relative;
+  margin-bottom: 25px;
+  display: inline-block;
+}
+
+.otp-input {
+  width: 200px;
+  padding: 15px;
+  font-size: 24px;
+  text-align: center;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  letter-spacing: 8px;
+  font-family: monospace;
+  transition: border-color 0.3s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.otp-input:disabled {
+  background-color: #e9ecef;
+  border-color: #28a745;
+}
+
+.verification-success {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #28a745;
+  font-weight: 500;
+}
+
+.success-icon {
+  background-color: #28a745;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.otp-actions {
+  margin-bottom: 30px;
+}
+
+.verify-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.verify-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.verify-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+.resend-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.resend-btn {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.resend-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.resend-timer {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}
+
+.email-tips {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.email-tips p {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+.email-tips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.email-tips li {
+  margin-bottom: 8px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Verification Status in Review Step */
+.verification-status {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.status-badge.verified {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.status-icon {
+  font-size: 16px;
+}
+
+.verify-email-btn {
+  background-color: #ffc107;
+  color: #212529;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.verify-email-btn:hover {
+  background-color: #e0a800;
+}
+
+.warning-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #ffeaa7;
+}
+
+.warning-message p {
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Review Section Styles */
+.review-sections {
+  margin-bottom: 30px;
+}
+
+.review-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.review-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 2px solid #dee2e6;
+  padding-bottom: 10px;
+}
+
+.review-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.review-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.review-item label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.review-item span {
+  flex: 1;
+  margin-left: 15px;
+  color: #333;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.submit-section {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.manual-register-btn,
+.google-register-btn {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.manual-register-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.manual-register-btn:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.google-register-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.google-register-btn:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+.manual-register-btn:disabled,
+.google-register-btn:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.divider {
+  margin: 20px 0;
+  position: relative;
+  text-align: center;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #dee2e6;
+}
+
+.divider span {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  padding: 0 15px;
+  font-size: 14px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .verification-container {
+    padding: 15px;
+  }
+  
+  .otp-input {
+    width: 160px;
+    font-size: 20px;
+    letter-spacing: 4px;
+  }
+  
+  .verification-success {
+    position: static;
+    transform: none;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  
+  .verification-status {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .review-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .review-item label {
+    min-width: auto;
+  }
+  
+  .review-item span {
+    margin-left: 0;
+    word-break: break-all;
+  }
+}

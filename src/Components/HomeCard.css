@@ -1,0 +1,382 @@
+/* HomeCard.css - Clean Version */
+
+.homecard {
+  background: #ffffff;
+  min-height: auto;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 280px;
+  max-width: 350px;
+  width: 300px;
+}
+
+.homecard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: #007bff;
+}
+
+/* Status-based styling */
+.homecard.true {
+  border-left: 5px solid #28a745;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+}
+
+.homecard.false {
+  border-left: 5px solid #ffc107;
+  background: linear-gradient(135deg, #ffffff 0%, #fffcf5 100%);
+}
+
+/* Stolen vehicle styling */
+.homecard.stolen {
+  
+  border-left: 5px solid #dc3545;
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+  box-shadow: 0 4px 6px rgba(220, 53, 69, 0.2);
+}
+
+/* Status badge */
+.status-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.homecard.true .status-badge {
+  background-color: #28a745;
+  color: white;
+}
+
+.homecard.false .status-badge {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.homecard.stolen .status-badge {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Status header */
+.homecard h2 {
+  margin: 0 0 18px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.homecard.true h2 {
+  background-color: #28a745;
+  color: white;
+}
+
+.homecard.false h2 {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.homecard.stolen h2 {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Vehicle image */
+.homecard img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 2px solid #e9ecef;
+  transition: transform 0.3s ease;
+}
+
+.homecard img:hover {
+  transform: scale(1.02);
+}
+
+/* Vehicle info section */
+.vehicle-info {
+  display: grid;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  border-left: 3px solid #007bff;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 13px;
+}
+
+/* Document link */
+.homecard a {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.homecard a:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.homecard a:active {
+  transform: translateY(0);
+}
+
+/* Action buttons container */
+.homecard-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.homecard-actions button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* View details button */
+.view-details-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+}
+
+.view-details-btn:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Approve button */
+.approve-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.approve-btn:hover {
+  background: linear-gradient(135deg, #218838 0%, #1abc9c 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Transfer button */
+.transfer-btn {
+  background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+  color: white;
+}
+
+.transfer-btn:hover {
+  background: linear-gradient(135deg, #5a32a3 0%, #d91a72 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(111, 66, 193, 0.3);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .homecard {
+    margin: 5px;
+    padding: 15px;
+    min-width: 250px;
+  }
+  
+  .homecard img {
+    height: 150px;
+  }
+  
+  .homecard a {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homecard {
+    margin: 5px 0;
+    padding: 12px;
+    min-width: auto;
+    max-width: none;
+  }
+  
+  .homecard img {
+    height: 120px;
+  }
+  
+  .homecard h2 {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+}
+.tax-info-section {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
+}
+
+.tax-info-section h4 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.tax-status-display {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.tax-status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tax-status-badge.paid {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.tax-status-badge.due {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
+}
+
+.tax-status-badge.overdue {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.tax-details {
+  margin-top: 10px;
+}
+
+.tax-details .info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 4px 0;
+}
+
+.tax-details .info-label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9em;
+}
+
+.tax-details .info-value {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9em;
+}
+
+.tax-amount {
+  color: #007bff !important;
+  font-family: 'Courier New', monospace;
+}
+
+.overdue-notice {
+  margin-top: 10px;
+  padding: 8px;
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.overdue-text {
+  color: #c53030;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tax-info-section {
+    padding: 12px;
+  }
+  
+  .tax-status-badge {
+    font-size: 0.8em;
+    padding: 4px 8px;
+  }
+  
+  .tax-details .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+}

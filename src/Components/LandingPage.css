@@ -1,0 +1,125 @@
+/* LandingPage.css */
+/* Make sure the page takes the full height and width */
+/* Make sure the page takes the full height and width */
+
+
+
+html,body{
+    background-color: antiquewhite;
+}
+
+.landing-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  /* Optional background */
+}
+
+
+.overlay {
+ 
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.content {
+  text-align: center;
+  max-width: 1000px;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #0c0c0c;
+  margin-bottom: 30px;
+}
+
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+.btn {
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background-color: #3498db;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+
+}
+
+.btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.verify-btn {
+  background-color: #27ae60;
+}
+
+.verify-btn:hover {
+  background-color: #1e8449;
+}
+
+.govt-btn {
+  background-color: #e67e22;
+}
+
+.govt-btn:hover {
+  background-color: #ca6f1e;
+}
+
+/* Features section */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  width: 260px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.icon-box {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+h3 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+.logo {
+  height: 150px; /* adjust as needed */
+  width: auto;
+  object-fit: contain;
+
+}
+
+

@@ -1,0 +1,72 @@
+/* GovLogin.css */
+
+.gov-login-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f5f7fa;
+}
+
+.gov-login-card {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.gov-login-sidebar {
+  width: 300px;
+  background: linear-gradient(135deg, #0f4c75 0%, #3282b8 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+.gov-login-sidebar h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.gov-login-sidebar p {
+  font-size: 16px;
+  text-align: center;
+}
+
+.gov-login-form {
+  flex: 1;
+  padding: 40px;
+}
+
+.gov-login-form h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.gov-login-form p {
+  margin-bottom: 30px;
+  font-size: 15px;
+  color: #555;
+}
+
+.gov-login-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  background-color: #0f4c75;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.gov-login-btn:hover {
+  background-color: #1b6ca8;
+}
