@@ -5,7 +5,5 @@ The Blockchain Vehicle Registration System streamlines car registration by using
 ## Website
 
 <div align="center">
-  <img src="https://github.com/kathireshG/Vehicle-Registration-Blockchain/raw/main/images/2.png">
-  <img src="https://github.com/kathireshG/Vehicle-Registration-Blockchain/raw/main/images/image3.png">
-  <img src="https://github.com/kathireshG/Vehicle-Registration-Blockchain/raw/main/images/image4.png">
+
 </div>
