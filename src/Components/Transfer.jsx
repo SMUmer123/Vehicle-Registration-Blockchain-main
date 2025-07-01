@@ -13,6 +13,7 @@ const VehicleTransfer = () => {
   const [userVehicles, setUserVehicles] = useState([]);
   const [pendingTransfers, setPendingTransfers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(false); // Separate loading for data operations
   const [view, setView] = useState("myVehicles");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [newOwnerWallet, setNewOwnerWallet] = useState("");
@@ -22,7 +23,6 @@ const VehicleTransfer = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [transferAmount, setTransferAmount] = useState("");
   const [incomingTransfers, setIncomingTransfers] = useState([]);
-// Update the view state to include new option
 
   const navigate = useNavigate();
   const db = getFirestore();
@@ -72,18 +72,21 @@ const VehicleTransfer = () => {
 
   const loadUserDataAndTransfers = async (contractInstance, currentAccount) => {
     try {
+      setDataLoading(true); // Set data loading instead of main loading
+      
       // Load user's vehicles (excluding those with pending transfers)
       await loadUserVehicles(contractInstance, currentAccount);
       
       // Load pending transfers
       await loadPendingTransfers(contractInstance, currentAccount);
-        await loadIncomingTransfers(contractInstance, currentAccount);
+      await loadIncomingTransfers(contractInstance, currentAccount);
       
     } catch (error) {
       console.error("Error loading data:", error);
       setErrorMessage("Failed to load user data and transfers");
     } finally {
-      setLoading(false);
+      setLoading(false); // Only set main loading to false after initialization
+      setDataLoading(false); // Set data loading to false
     }
   };
 
@@ -132,54 +135,96 @@ const VehicleTransfer = () => {
     setUserVehicles(vehicles);
   };
 
-const loadPendingTransfers = async (contractInstance, walletAddress) => {
-  const transferCount = await contractInstance.methods.transferRequestCount().call();
-  const transfers = [];
-  
-  for (let i = 1; i <= transferCount; i++) {
-    try {
-      const transfer = await contractInstance.methods.getTransferRequest(i).call();
-      
-      // Show transfers initiated by current user that are not completed
-      if (transfer.currentOwner.toLowerCase() === walletAddress.toLowerCase() && !transfer.completed) {
-        // Get vehicle details
-        const vehicle = await contractInstance.methods.vehicleRegistrations(transfer.registrationId).call();
-        transfers.push({
-          requestId: i,
-          registrationId: transfer.registrationId,
-          vehicleNo: vehicle.vehicleNo,
-          vehicleMake: vehicle.vehicleMake,
-          vehicleModel: vehicle.vehicleModel,
-          newOwner: transfer.newOwner,
-          transferAmount: transfer.transferAmount || "0",        // Now this should work
-          newOwnerAccepted: transfer.newOwnerAccepted || false,  // Now this should work
-          approved: transfer.approved,
-          completed: transfer.completed
-        });
+  const loadPendingTransfers = async (contractInstance, walletAddress) => {
+    const transferCount = await contractInstance.methods.transferRequestCount().call();
+    const transfers = [];
+    
+    for (let i = 1; i <= transferCount; i++) {
+      try {
+        const transfer = await contractInstance.methods.getTransferRequest(i).call();
+        
+        // Show transfers initiated by current user that are not completed
+        if (transfer.currentOwner.toLowerCase() === walletAddress.toLowerCase() && !transfer.completed) {
+          // Get vehicle details
+          const vehicle = await contractInstance.methods.vehicleRegistrations(transfer.registrationId).call();
+          transfers.push({
+            requestId: i,
+            registrationId: transfer.registrationId,
+            vehicleNo: vehicle.vehicleNo,
+            vehicleMake: vehicle.vehicleMake,
+            vehicleModel: vehicle.vehicleModel,
+            newOwner: transfer.newOwner,
+            transferAmount: transfer.transferAmount || "0",
+            newOwnerAccepted: transfer.newOwnerAccepted || false,
+            approved: transfer.approved,
+            completed: transfer.completed
+          });
+        }
+      } catch (error) {
+        // Transfer might be deleted, continue
+        continue;
       }
-    } catch (error) {
-      // Transfer might be deleted, continue
-      continue;
     }
-  }
-  
-  setPendingTransfers(transfers);
-};
+    
+    setPendingTransfers(transfers);
+  };
+
+  const loadIncomingTransfers = async (contractInstance, walletAddress) => {
+    const transferCount = await contractInstance.methods.transferRequestCount().call();
+    const transfers = [];
+    
+    for (let i = 1; i <= transferCount; i++) {
+      try {
+        const transfer = await contractInstance.methods.getTransferRequest(i).call();
+        
+        // Show transfers where current user is the new owner and not completed
+        if (transfer.newOwner.toLowerCase() === walletAddress.toLowerCase() && 
+            !transfer.completed) {
+          
+          // Get vehicle details
+          const vehicle = await contractInstance.methods.vehicleRegistrations(transfer.registrationId).call();
+          
+          // Get current owner details
+          const currentOwnerId = await contractInstance.methods.getUserIdByAddress(transfer.currentOwner).call();
+          const currentOwnerDetails = await contractInstance.methods.users(currentOwnerId).call();
+          
+          transfers.push({
+            requestId: i,
+            registrationId: transfer.registrationId,
+            vehicleNo: vehicle.vehicleNo,
+            vehicleMake: vehicle.vehicleMake,
+            vehicleModel: vehicle.vehicleModel,
+            vehicleModelYear: vehicle.vehicleModelYear,
+            currentOwner: transfer.currentOwner,
+            currentOwnerName: currentOwnerDetails.name,
+            transferAmount: transfer.transferAmount ? transfer.transferAmount.toString() : "0",
+            newOwnerAccepted: transfer.newOwnerAccepted || false,
+            approved: transfer.approved,
+            completed: transfer.completed
+          });
+        }
+      } catch (error) {
+        continue;
+      }
+    }
+    
+    setIncomingTransfers(transfers);
+  };
 
   const validateNewOwner = async () => {
     try {
-      setLoading(true);
+      setDataLoading(true);
       setErrorMessage("");
       
       if (!web3.utils.isAddress(newOwnerWallet)) {
         setErrorMessage("Invalid wallet address");
-        setLoading(false);
+        setDataLoading(false);
         return;
       }
       
       if (newOwnerWallet.toLowerCase() === account.toLowerCase()) {
         setErrorMessage("You cannot transfer vehicle to yourself");
-        setLoading(false);
+        setDataLoading(false);
         return;
       }
       
@@ -187,7 +232,7 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
       const isRegistered = await contract.methods.isRegistered(newOwnerWallet).call();
       if (!isRegistered) {
         setErrorMessage("The new owner must be registered in the system");
-        setLoading(false);
+        setDataLoading(false);
         return;
       }
       
@@ -196,7 +241,7 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
       
       if (!newOwner.approvedByGovt) {
         setErrorMessage("The new owner must be approved by the government");
-        setLoading(false);
+        setDataLoading(false);
         return;
       }
       
@@ -213,13 +258,13 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
       console.error("Validation error:", error);
       setErrorMessage("Failed to validate new owner: " + error.message);
     } finally {
-      setLoading(false);
+      setDataLoading(false);
     }
   };
 
   const confirmTransfer = async (vehicleId) => {
     try {
-      setLoading(true);
+      setDataLoading(true);
       setErrorMessage("");
       setSuccessMessage("");
       
@@ -227,11 +272,11 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
       const vehicle = await contract.methods.vehicleRegistrations(vehicleId).call();
       
       // Request ownership transfer
-        await contract.methods.requestOwnershipTransfer(
-      vehicle.vehicleNo, 
-      newOwnerWallet, 
-      web3.utils.toWei(transferAmount, 'ether')
-    ).send({ from: account });
+      await contract.methods.requestOwnershipTransfer(
+        vehicle.vehicleNo, 
+        newOwnerWallet, 
+        web3.utils.toWei(transferAmount, 'ether')
+      ).send({ from: account });
       
       // Update Firebase
       await updateTransferRequestInFirebase(vehicle.vehicleNo, newOwnerWallet);
@@ -252,7 +297,36 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
       console.error("Transfer request error:", error);
       setErrorMessage("Failed to request transfer: " + error.message);
     } finally {
-      setLoading(false);
+      setDataLoading(false);
+    }
+  };
+
+  const acceptTransferAndPay = async (requestId, transferAmount) => {
+    try {
+      setDataLoading(true);
+      setErrorMessage("");
+      setSuccessMessage("");
+      
+      // Ensure transferAmount is a string
+      const amountStr = typeof transferAmount === 'string' ? transferAmount : transferAmount.toString();
+      
+      // Call smart contract function
+      await contract.methods.acceptTransferAndPay(requestId)
+        .send({ 
+          from: account,
+          value: amountStr
+        });
+      
+      setSuccessMessage("Transfer accepted and payment sent! Waiting for government approval.");
+      
+      // Reload data
+      await loadUserDataAndTransfers(contract, account);
+      
+    } catch (error) {
+      console.error("Accept transfer error:", error);
+      setErrorMessage("Failed to accept transfer: " + error.message);
+    } finally {
+      setDataLoading(false);
     }
   };
 
@@ -283,91 +357,25 @@ const loadPendingTransfers = async (contractInstance, walletAddress) => {
   };
 
   // Helper function to safely format Wei to Ether
-const formatTransferAmount = (amount) => {
-  try {
-    if (!amount || amount === "0") return "0";
-    // Ensure amount is a string
-    const amountStr = typeof amount === 'string' ? amount : amount.toString();
-    return web3.utils.fromWei(amountStr, 'ether');
-  } catch (error) {
-    console.error("Error formatting transfer amount:", error);
-    return "0";
-  }
-};
-
-const loadIncomingTransfers = async (contractInstance, walletAddress) => {
-  const transferCount = await contractInstance.methods.transferRequestCount().call();
-  const transfers = [];
-  
-  for (let i = 1; i <= transferCount; i++) {
+  const formatTransferAmount = (amount) => {
     try {
-      const transfer = await contractInstance.methods.getTransferRequest(i).call();
-      
-      // Show transfers where current user is the new owner and not completed
-      if (transfer.newOwner.toLowerCase() === walletAddress.toLowerCase() && 
-          !transfer.completed) {
-        
-        // Get vehicle details
-        const vehicle = await contractInstance.methods.vehicleRegistrations(transfer.registrationId).call();
-        
-        // Get current owner details
-        const currentOwnerId = await contractInstance.methods.getUserIdByAddress(transfer.currentOwner).call();
-        const currentOwnerDetails = await contractInstance.methods.users(currentOwnerId).call();
-        
-        transfers.push({
-          requestId: i,
-          registrationId: transfer.registrationId,
-          vehicleNo: vehicle.vehicleNo,
-          vehicleMake: vehicle.vehicleMake,
-          vehicleModel: vehicle.vehicleModel,
-          vehicleModelYear: vehicle.vehicleModelYear,
-          currentOwner: transfer.currentOwner,
-          currentOwnerName: currentOwnerDetails.name,
-          transferAmount: transfer.transferAmount ? transfer.transferAmount.toString() : "0", // Convert to string
-          newOwnerAccepted: transfer.newOwnerAccepted || false,
-          approved: transfer.approved,
-          completed: transfer.completed
-        });
-      }
+      if (!amount || amount === "0") return "0";
+      const amountStr = typeof amount === 'string' ? amount : amount.toString();
+      return web3.utils.fromWei(amountStr, 'ether');
     } catch (error) {
-      continue;
+      console.error("Error formatting transfer amount:", error);
+      return "0";
     }
-  }
-  
-  setIncomingTransfers(transfers);
-};
-const acceptTransferAndPay = async (requestId, transferAmount) => {
-  try {
-    setLoading(true);
-    setErrorMessage("");
-    setSuccessMessage("");
-    
-    // Ensure transferAmount is a string
-    const amountStr = typeof transferAmount === 'string' ? transferAmount : transferAmount.toString();
-    
-    // Call smart contract function
-    await contract.methods.acceptTransferAndPay(requestId)
-      .send({ 
-        from: account,
-        value: amountStr  // Use the string amount directly
-      });
-    
-    setSuccessMessage("Transfer accepted and payment sent! Waiting for government approval.");
-    
-    // Reload data
-    await loadUserDataAndTransfers(contract, account);
-    
-  } catch (error) {
-    console.error("Accept transfer error:", error);
-    setErrorMessage("Failed to accept transfer: " + error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
+  // Show initial loading only for the first load
   if (loading) return (
-    <div className="loading-container">
-      <p className="loading-text">🔄 Loading...</p>
+    <div>
+      <Navbar/>
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p className="loading-text">🔄 Initializing...</p>
+      </div>
     </div>
   );
 
@@ -379,23 +387,33 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
         <div className="vehicle-navbar">
           <h2 className="navbar-title">🚗 Vehicle Transfer System</h2>
           <div className="navbar-buttons">
-  <button onClick={() => setView("myVehicles")} className={view === "myVehicles" ? "active" : ""}>
-    My Vehicles
-  </button>
-  <button 
-    onClick={() => setView("pendingTransfers")} 
-    className={view === "pendingTransfers" ? "active" : ""}
-  >
-    My Transfer Requests
-  </button>
-  <button 
-    onClick={() => setView("incomingTransfers")} 
-    className={view === "incomingTransfers" ? "active" : ""}
-  >
-    Incoming Requests
-  </button>
-</div>
+            <button onClick={() => setView("myVehicles")} className={view === "myVehicles" ? "active" : ""}>
+              My Vehicles
+            </button>
+            <button 
+              onClick={() => setView("pendingTransfers")} 
+              className={view === "pendingTransfers" ? "active" : ""}
+            >
+              My Transfer Requests
+            </button>
+            <button 
+              onClick={() => setView("incomingTransfers")} 
+              className={view === "incomingTransfers" ? "active" : ""}
+            >
+              Incoming Requests
+            </button>
+          </div>
         </div>
+
+        {/* Data Loading Spinner Overlay */}
+        {dataLoading && (
+          <div className="data-loading-overlay">
+            <div className="data-loading-content">
+              <div className="spinner"></div>
+              <p>🔄 Processing...</p>
+            </div>
+          </div>
+        )}
 
         {/* Error and Success Messages */}
         {errorMessage && (
@@ -443,6 +461,7 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
                             }
                           }}
                           className="transfer-button"
+                          disabled={dataLoading}
                         >
                           {selectedVehicle === vehicle.id ? "Cancel" : "Transfer Ownership"}
                         </button>
@@ -455,6 +474,7 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
                               value={newOwnerWallet}
                               onChange={(e) => setNewOwnerWallet(e.target.value)}
                               className="wallet-input"
+                              disabled={dataLoading}
                             />
                             <input 
                               type="number" 
@@ -464,13 +484,21 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
                               className="amount-input"
                               step="0.01"
                               min="0"
+                              disabled={dataLoading}
                             />
                             <button 
                               onClick={validateNewOwner}
                               className="validate-button"
-                              disabled={!newOwnerWallet.trim() || !transferAmount.trim()}
+                              disabled={!newOwnerWallet.trim() || !transferAmount.trim() || dataLoading}
                             >
-                              Validate & Preview
+                              {dataLoading ? (
+                                <>
+                                  <div className="button-spinner"></div>
+                                  Validating...
+                                </>
+                              ) : (
+                                "Validate & Preview"
+                              )}
                             </button>
                           </div>
                         )}
@@ -488,12 +516,21 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
                               <button 
                                 onClick={() => confirmTransfer(vehicle.id)}
                                 className="confirm-button"
+                                disabled={dataLoading}
                               >
-                                ✅ Confirm Transfer
+                                {dataLoading ? (
+                                  <>
+                                    <div className="button-spinner"></div>
+                                    Processing...
+                                  </>
+                                ) : (
+                                  "✅ Confirm Transfer"
+                                )}
                               </button>
                               <button 
                                 onClick={cancelTransfer}
                                 className="cancel-button"
+                                disabled={dataLoading}
                               >
                                 ❌ Cancel
                               </button>
@@ -568,70 +605,79 @@ const acceptTransferAndPay = async (requestId, transferAmount) => {
             )}
           </div>
         )}
-           {/* Incoming Transfer Requests Section */}
-{view === "incomingTransfers" && (
-  <div className="transfers-section">
-    <h3>Incoming Transfer Requests</h3>
-    {incomingTransfers.length === 0 ? (
-      <p className="no-data-message">No incoming transfer requests</p>
-    ) : (
-      <ul className="transfers-list">
-        {incomingTransfers.map((transfer, index) => (
-          <li className="transfer-item" key={index}>
-            <div className="transfer-details">
-              <h4>Vehicle: {transfer.vehicleNo}</h4>
-              <p>{transfer.vehicleMake} {transfer.vehicleModel} ({transfer.vehicleModelYear})</p>
-              <p><strong>From:</strong> {transfer.currentOwnerName} ({transfer.currentOwner})</p>
-              <p><strong>Transfer Amount:</strong> {formatTransferAmount(transfer.transferAmount)} ETH</p>
-              <p>
-                <strong>Status:</strong>
-                <span className={`status-badge ${
-                  transfer.approved ? 'approved' : 
-                  transfer.newOwnerAccepted ? 'accepted' : 'pending'
-                }`}>
-                  {transfer.approved ? "✅ Approved by Government" :
-                   transfer.newOwnerAccepted ? "💰 Paid - Waiting for Government Approval" :
-                   "⏳ Waiting for Your Acceptance"}
-                </span>
-              </p>
-            </div>
-            
-            {!transfer.newOwnerAccepted && !transfer.approved && (
-              <div className="accept-section">
-                <div className="payment-info">
-                  <p><strong>You need to pay: {formatTransferAmount(transfer.transferAmount)} ETH</strong></p>
-                  <p className="payment-note">
-                    💡 Your payment will be held in escrow until government approval.
-                    If declined, you'll get a full refund.
-                  </p>
-                </div>
-                <button 
-                  onClick={() => acceptTransferAndPay(transfer.requestId, transfer.transferAmount)}
-                  className="accept-payment-button"
-                >
-                  💰 Accept & Pay {formatTransferAmount(transfer.transferAmount)} ETH
-                </button>
-              </div>
+
+        {/* Incoming Transfer Requests Section */}
+        {view === "incomingTransfers" && (
+          <div className="transfers-section">
+            <h3>Incoming Transfer Requests</h3>
+            {incomingTransfers.length === 0 ? (
+              <p className="no-data-message">No incoming transfer requests</p>
+            ) : (
+              <ul className="transfers-list">
+                {incomingTransfers.map((transfer, index) => (
+                  <li className="transfer-item" key={index}>
+                    <div className="transfer-details">
+                      <h4>Vehicle: {transfer.vehicleNo}</h4>
+                      <p>{transfer.vehicleMake} {transfer.vehicleModel} ({transfer.vehicleModelYear})</p>
+                      <p><strong>From:</strong> {transfer.currentOwnerName} ({transfer.currentOwner})</p>
+                      <p><strong>Transfer Amount:</strong> {formatTransferAmount(transfer.transferAmount)} ETH</p>
+                      <p>
+                        <strong>Status:</strong>
+                        <span className={`status-badge ${
+                          transfer.approved ? 'approved' : 
+                          transfer.newOwnerAccepted ? 'accepted' : 'pending'
+                        }`}>
+                          {transfer.approved ? "✅ Approved by Government" :
+                           transfer.newOwnerAccepted ? "💰 Paid - Waiting for Government Approval" :
+                           "⏳ Waiting for Your Acceptance"}
+                        </span>
+                      </p>
+                    </div>
+                    
+                    {!transfer.newOwnerAccepted && !transfer.approved && (
+                      <div className="accept-section">
+                        <div className="payment-info">
+                          <p><strong>You need to pay: {formatTransferAmount(transfer.transferAmount)} ETH</strong></p>
+                          <p className="payment-note">
+                            💡 Your payment will be held in escrow until government approval.
+                            If declined, you'll get a full refund.
+                          </p>
+                        </div>
+                        <button 
+                          onClick={() => acceptTransferAndPay(transfer.requestId, transfer.transferAmount)}
+                          className="accept-payment-button"
+                          disabled={dataLoading}
+                        >
+                          {dataLoading ? (
+                            <>
+                              <div className="button-spinner"></div>
+                              Processing...
+                            </>
+                          ) : (
+                            `💰 Accept & Pay ${formatTransferAmount(transfer.transferAmount)} ETH`
+                          )}
+                        </button>
+                      </div>
+                    )}
+                    
+                    {transfer.newOwnerAccepted && !transfer.approved && (
+                      <div className="waiting-approval">
+                        <p>✅ Payment sent! Waiting for government approval.</p>
+                        <p>💰 Amount: {formatTransferAmount(transfer.transferAmount)} ETH (held in escrow)</p>
+                      </div>
+                    )}
+                    
+                    {transfer.approved && (
+                      <div className="transfer-completed">
+                        <p>🎉 Transfer completed! You are now the owner of this vehicle.</p>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
             )}
-            
-            {transfer.newOwnerAccepted && !transfer.approved && (
-              <div className="waiting-approval">
-                <p>✅ Payment sent! Waiting for government approval.</p>
-                <p>💰 Amount: {formatTransferAmount(transfer.transferAmount)} ETH (held in escrow)</p>
-              </div>
-            )}
-            
-            {transfer.approved && (
-              <div className="transfer-completed">
-                <p>🎉 Transfer completed! You are now the owner of this vehicle.</p>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
-)}
+          </div>
+        )}
       </div>
     </div>
   );

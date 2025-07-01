@@ -385,17 +385,19 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Loading */
 .loading-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  min-height: 50vh;
+  padding: 40px;
 }
 
 .loading-text {
   font-size: 18px;
-  color: #555;
+  color: #666;
+  margin-top: 20px;
 }
 
 /* No Data Message */

@@ -23,6 +23,7 @@ const Home = () => {
   const [selectedFilter, setSelectedFilter] = useState("approved");
   const [selectedView, setSelectedView] = useState("vehicles");
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   
   // Recovery modal states
   const [showRecoveryModal, setShowRecoveryModal] = useState(false);
@@ -34,9 +35,11 @@ const Home = () => {
 
   useEffect(() => {
     const loadBlockchainData = async () => {
+      setInitialLoading(true); 
       try {
         if (!window.ethereum) {
           console.log("Please install MetaMask!");
+            setInitialLoading(false);
           return;
         }
 
@@ -72,6 +75,8 @@ const Home = () => {
         });
       } catch (error) {
         console.error("Error loading blockchain data:", error);
+      }finally{
+        setInitialLoading(false); 
       }
     };
 
@@ -418,6 +423,7 @@ const Home = () => {
   const hasPendingRecoveryRequest = (vehicleId) => {
     return pendingRecoveryRequests.has(vehicleId.toString());
   };
+  
 
   return (
     <div>
@@ -483,7 +489,13 @@ const Home = () => {
 
         {/* Main Content */}
         <div className="main-content">
-          {selectedView === "vehicles" ? (
+         {(initialLoading && vehicles.length === 0) ? ( 
+    <div className="initial-loading-container">
+      <div className="loading-spinner"></div>
+      <h2>Loading Vehicle Data...</h2>
+      <p>Connecting to blockchain and fetching your vehicles...</p>
+    </div> ) : selectedView === "vehicles" ? (
+          
             <>
               <h1 style={{ marginTop: "10px", marginBottom: "20px" }}>
                 {getFilterTitle()}
