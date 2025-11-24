@@ -1,3 +1,4 @@
+// Updated ReviewSubmitStep.jsx (with NADRA verification status added)
 import React from 'react';
 import './Registration.css';
 
@@ -6,7 +7,8 @@ const ReviewSubmitStep = ({
   errors,
   account,
   isLoading,
-  otpVerified, // New prop
+  otpVerified,
+  nadraVerified, // New prop
   handleManualRegister,
   handleGoogleSignUp,
   prevStep,
@@ -17,6 +19,27 @@ const ReviewSubmitStep = ({
       <div className="step-header">
         <h2>Review & Submit</h2>
         <p>Please review your information before submitting</p>
+      </div>
+
+      {/* NADRA Verification Status */}
+      <div className="verification-status">
+        <div className={`status-badge ${nadraVerified ? 'verified' : 'pending'}`}>
+          <span className="status-icon">
+            {nadraVerified ? '✓' : '⚠️'}
+          </span>
+          <span>
+            NADRA {nadraVerified ? 'Verified' : 'Not Verified'}
+          </span>
+        </div>
+        {!nadraVerified && (
+          <button 
+            type="button" 
+            className="verify-nadra-btn"
+            onClick={() => goToStep(5)}
+          >
+            Verify NADRA
+          </button>
+        )}
       </div>
 
       {/* Email Verification Status */}
@@ -33,7 +56,7 @@ const ReviewSubmitStep = ({
           <button 
             type="button" 
             className="verify-email-btn"
-            onClick={() => goToStep(5)}
+            onClick={() => goToStep(6)}
           >
             Verify Email
           </button>
@@ -224,10 +247,10 @@ const ReviewSubmitStep = ({
         </div>
       </div>
 
-      {/* Warning if email not verified */}
-      {!otpVerified && (
+      {/* Warning if not verified */}
+      {(!otpVerified || !nadraVerified) && (
         <div className="warning-message">
-          <p>⚠️ Please verify your email address before submitting the form.</p>
+          <p>⚠️ Please verify your NADRA details and email address before submitting the form.</p>
         </div>
       )}
 
@@ -237,7 +260,7 @@ const ReviewSubmitStep = ({
           type="button"
           className="manual-register-btn"
           onClick={handleManualRegister}
-          disabled={isLoading || !account || !otpVerified}
+          disabled={isLoading || !account || !otpVerified || !nadraVerified}
         >
           {isLoading ? "Registering..." : "Submit Request"}
         </button>

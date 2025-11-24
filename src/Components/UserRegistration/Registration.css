@@ -392,3 +392,335 @@ input.error, textarea.error, select.error {
   object-fit: contain;
 
 }
+/* Registration.css - Complete & Enhanced Version */
+
+/* ... (keep all your existing styles above unchanged until the end) ... */
+
+/* === NADRA & EMAIL VERIFICATION SPECIFIC STYLES === */
+
+.form-step {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.step-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.step-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.step-header p {
+  color: #666;
+  font-size: 16px;
+}
+
+/* Verification Container */
+.verification-container {
+  background-color: #f8f9ff;
+  border-radius: 12px;
+  padding: 30px;
+  border: 1px solid #e0e7ff;
+  box-shadow: 0 4px 15px rgba(92, 72, 186, 0.08);
+}
+
+.details-display,
+.review-grid {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e0e7ff;
+  margin-bottom: 20px;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.review-item label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.review-item span {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Verify Button */
+.verify-btn {
+  background: linear-gradient(135deg, #5c48ba 0%, #7d6ce0 100%);
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(92, 72, 186, 0.3);
+  transition: all 0.3s ease;
+  min-width: 220px;
+}
+
+.verify-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(92, 72, 186, 0.4);
+}
+
+.verify-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Verification Success */
+.verification-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 18px 30px;
+  border-radius: 10px;
+  border: 1px solid #c3e6cb;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.success-icon {
+  font-size: 28px;
+}
+
+/* Status Badges in Review Step */
+.verification-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 20px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background-color: #f0f5ff;
+  border: 1px solid #d4e5ff;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.status-badge.verified {
+  color: #155724;
+}
+
+.status-badge.pending {
+  color: #856404;
+}
+
+.status-icon {
+  font-size: 24px;
+}
+
+.verify-email-btn,
+.verify-nadra-btn {
+  background-color: transparent;
+  color: #5c48ba;
+  border: 1px solid #5c48ba;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.verify-email-btn:hover,
+.verify-nadra-btn:hover {
+  background-color: #5c48ba;
+  color: white;
+}
+
+/* Warning Message */
+.warning-message {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border-left: 5px solid #ffc107;
+  margin: 20px 0;
+  font-weight: 500;
+}
+
+/* Form Navigation Buttons */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.prev-btn,
+.next-btn {
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 140px;
+}
+
+.prev-btn {
+  background-color: #f8f9fa;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.prev-btn:hover {
+  background-color: #e9ecef;
+}
+
+.next-btn {
+  background: linear-gradient(135deg, #5c48ba 0%, #7d6ce0 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 10px rgba(92, 72, 186, 0.3);
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(92, 72, 186, 0.4);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .verification-container {
+    padding: 20px;
+  }
+
+  .verify-btn {
+    width: 100%;
+    padding: 16px;
+  }
+
+  .form-navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .prev-btn,
+  .next-btn {
+    width: 100%;
+  }
+}
+
+/* Loading Text inside Button */
+.verify-btn span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+/* ────── Centered Full-Screen Feedback Overlay ────── */
+.verification-feedback-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.verification-feedback-card {
+  background: white;
+  padding: 40px 50px;
+  border-radius: 20px;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.5s ease-out;
+}
+
+.verification-feedback-card.success {
+  border-top: 8px solid #28a745;
+}
+
+.verification-feedback-card.error {
+  border-top: 8px solid #dc3545;
+}
+
+.verification-feedback-icon {
+  font-size: 72px;
+  margin-bottom: 20px;
+}
+
+.verification-feedback-card.success .verification-feedback-icon {
+  color: #28a745;
+}
+
+.verification-feedback-card.error .verification-feedback-icon {
+  color: #dc3545;
+}
+
+.verification-feedback-card h3 {
+  font-size: 26px;
+  margin: 15px 0;
+  color: #333;
+}
+
+.verification-feedback-card p {
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.verification-feedback-card .close-feedback-btn {
+  background: #5c48ba;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.verification-feedback-card .close-feedback-btn:hover {
+  background: #4a3a99;
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

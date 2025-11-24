@@ -14,6 +14,23 @@ const validateDates = (issuanceDate, expiryDate) => {
   return null;
 };
 
+const validateIssuanceDate = (issuanceDate) => {
+  if (!issuanceDate) return "Issuance date is required";
+  
+  const today = new Date();
+  const issueDate = new Date(issuanceDate);
+  
+  // Set time to start of day for accurate comparison
+  today.setHours(0, 0, 0, 0);
+  issueDate.setHours(0, 0, 0, 0);
+  
+  if (issueDate > today) {
+    return "Issuance date cannot be in the future";
+  }
+  
+  return null;
+};
+
 const CnicInfoStep = ({ formData, updateFormData, errors, setErrors, nextStep, prevStep }) => {
   // Format CNIC input
   const formatCNIC = (e) => {
@@ -41,7 +58,7 @@ const CnicInfoStep = ({ formData, updateFormData, errors, setErrors, nextStep, p
     if (id === "cnicIssuanceDate") {
       setErrors(prev => ({
         ...prev,
-        cnicIssuanceDate: value ? null : "Issuance date is required",
+        cnicIssuanceDate: validateIssuanceDate(value),
         dateValidation: value && formData.cnicExpiryDate ? 
           validateDates(value, formData.cnicExpiryDate) : prev.dateValidation
       }));
@@ -59,7 +76,7 @@ const CnicInfoStep = ({ formData, updateFormData, errors, setErrors, nextStep, p
   const validateForm = () => {
     const newErrors = {
       cnic: validateCnic(formData.cnic),
-      cnicIssuanceDate: formData.cnicIssuanceDate ? null : "Issuance date is required",
+      cnicIssuanceDate: validateIssuanceDate(formData.cnicIssuanceDate),
       cnicExpiryDate: formData.cnicExpiryDate ? null : "Expiry date is required",
       dateValidation: validateDates(formData.cnicIssuanceDate, formData.cnicExpiryDate)
     };

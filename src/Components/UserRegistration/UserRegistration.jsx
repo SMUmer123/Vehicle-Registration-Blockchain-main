@@ -19,13 +19,14 @@ import BasicInfoStep from "./BasicInfoStep";
 import CnicInfoStep from "./CnicInfoStep";
 import ContactInfoStep from "./ContactInfoStep";
 import AdditionalInfoStep from "./AdditionalInfoStep";
+import NadraVerificationStep from "./NadraVerificationStep"; // New component
+import EmailVerificationStep from "./EmailVerificationStep";
 import ReviewSubmitStep from "./ReviewSubmitStep";
-import EmailVerificationStep from "./EmailVerificationStep"; // New component
 
 const UserRegistration = () => {
   // Step management
   const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 6; // Increased from 5 to 6 for email verification
+  const totalSteps = 7; // Increased to 7 to include NADRA verification
   
   // Form data state
   const [formData, setFormData] = useState({
@@ -62,6 +63,9 @@ const UserRegistration = () => {
   const [contract, setContract] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // NADRA verification state
+  const [nadraVerified, setNadraVerified] = useState(false);
+
   // Email OTP verification states
   const [otp, setOtp] = useState("");
   const [generatedOtp, setGeneratedOtp] = useState("");
@@ -81,38 +85,39 @@ const UserRegistration = () => {
       theme: "dark",
     });
   };
-useEffect(() => {
-  let isMounted = true;
 
-  const initBlockchain = async () => {
-    try {
-      if (!window.ethereum) {
-        notify("⚠️ Please install MetaMask", "error");
-        return;
+  useEffect(() => {
+    let isMounted = true;
+
+    const initBlockchain = async () => {
+      try {
+        if (!window.ethereum) {
+          notify("⚠️ Please install MetaMask", "error");
+          return;
+        }
+
+        const web3Instance = new Web3(window.ethereum);
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        const accounts = await web3Instance.eth.getAccounts();
+
+        if (isMounted) {
+          setWeb3(web3Instance);
+          setAccount(accounts[0]);
+          const contractInstance = new web3Instance.eth.Contract(contractABI, contractAddress);
+          setContract(contractInstance);
+        }
+      } catch (error) {
+        console.error("Blockchain initialization error:", error);
+        notify("❌ Failed to connect to MetaMask", "error");
       }
+    };
 
-      const web3Instance = new Web3(window.ethereum);
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const accounts = await web3Instance.eth.getAccounts();
+    initBlockchain();
 
-      if (isMounted) {
-        setWeb3(web3Instance);
-        setAccount(accounts[0]);
-        const contractInstance = new web3Instance.eth.Contract(contractABI, contractAddress);
-        setContract(contractInstance);
-      }
-    } catch (error) {
-      console.error("Blockchain initialization error:", error);
-      notify("❌ Failed to connect to MetaMask", "error");
-    }
-  };
-
-  initBlockchain();
-
-  return () => {
-    isMounted = false;
-  };
-}, []);
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // OTP Timer effect
   useEffect(() => {
@@ -253,6 +258,11 @@ useEffect(() => {
       return;
     }
 
+    if (!nadraVerified) {
+      notify("⚠️ Please verify NADRA details first", "warning");
+      return;
+    }
+
     if (!contract || !account) {
       notify("⛔ Web3 not initialized", "error");
       return;
@@ -270,7 +280,6 @@ useEffect(() => {
 
       // Register on blockchain
       await contract.methods
-    
          .registerUser(formData.email, formData.name, formData.cnic, CryptoJS.SHA256(formData.password).toString())
          .send({ from: account });
 
@@ -319,6 +328,11 @@ useEffect(() => {
   const handleGoogleSignUp = async () => {
     if (!otpVerified) {
       notify("⚠️ Please verify your email first", "warning");
+      return;
+    }
+
+    if (!nadraVerified) {
+      notify("⚠️ Please verify NADRA details first", "warning");
       return;
     }
 
@@ -438,6 +452,16 @@ useEffect(() => {
         );
       case 5:
         return (
+          <NadraVerificationStep 
+            formData={formData}
+            nadraVerified={nadraVerified}
+            setNadraVerified={setNadraVerified}
+            nextStep={nextStep}
+            prevStep={prevStep}
+          />
+        );
+      case 6:
+        return (
           <EmailVerificationStep 
             formData={formData}
             otp={otp}
@@ -453,7 +477,7 @@ useEffect(() => {
             prevStep={prevStep}
           />
         );
-      case 6:
+      case 7:
         return (
           <ReviewSubmitStep 
             formData={formData}
@@ -461,6 +485,7 @@ useEffect(() => {
             account={account}
             isLoading={isLoading}
             otpVerified={otpVerified}
+            nadraVerified={nadraVerified} // Added prop
             handleManualRegister={handleManualRegister}
             handleGoogleSignUp={handleGoogleSignUp}
             prevStep={prevStep}
