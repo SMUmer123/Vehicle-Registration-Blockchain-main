@@ -1,49 +1,61 @@
 /* LandingPage.css */
-/* Make sure the page takes the full height and width */
-/* Make sure the page takes the full height and width */
 
 
-
-html,body{
-    background-color: antiquewhite;
-}
-
-.landing-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+body {
   width: 100%;
-  overflow: hidden;
-  position: relative;
-  /* Optional background */
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: antiquewhite;
 }
 
+/* Main Container */
+.landing-container {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
 
+/* Overlay / Page Content Wrapper */
 .overlay {
- 
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
   padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* Center Content */
 .content {
+  width: 100%;
+  max-width: 1100px;
   text-align: center;
-  max-width: 1000px;
 }
 
+/* Logo */
+.logo {
+  height: 140px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+/* Heading */
 h1 {
   font-size: 3rem;
-  margin-bottom: 10px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: #000;
 }
 
+/* Tagline */
 .tagline {
   font-size: 1.2rem;
-  color: #0c0c0c;
-  margin-bottom: 30px;
+  color: #111;
+  margin-bottom: 35px;
 }
 
+/* Buttons */
 .btn-group {
   display: flex;
   flex-wrap: wrap;
@@ -55,19 +67,20 @@ h1 {
 .btn {
   text-decoration: none;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: 10px;
   background-color: #3498db;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   transition: all 0.3s ease;
-
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
 }
 
 .btn:hover {
   background-color: #2980b9;
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
+/* Button Colors */
 .verify-btn {
   background-color: #27ae60;
 }
@@ -84,42 +97,81 @@ h1 {
   background-color: #ca6f1e;
 }
 
-/* Features section */
+/* Features Section */
 .features {
+  margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 30px;
+  gap: 25px;
 }
 
+/* Feature Cards */
 .feature-card {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 20px;
-  width: 260px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 270px;
+  padding: 25px 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.22);
 }
 
 .icon-box {
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   margin-bottom: 15px;
 }
 
 h3 {
+  font-size: 1.4rem;
   margin-bottom: 10px;
-  font-size: 1.5rem;
-}
-.logo {
-  height: 150px; /* adjust as needed */
-  width: auto;
-  object-fit: contain;
-
+  color: #000;
 }
 
+.feature-card p {
+  font-size: 1rem;
+  color: #222;
+  line-height: 1.4;
+}
 
+.video-section {
+  margin-top: 50px;
+  padding-bottom: 60px;
+  text-align: center;
+}
+
+.video-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* Responsive 16:9 Video */
+.video-wrapper {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+
+  /* 👇 This makes it responsive */
+  aspect-ratio: 16 / 9;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
